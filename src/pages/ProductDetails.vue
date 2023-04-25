@@ -19,8 +19,16 @@
                         <dt class="text-sky-500">
                             <div class="flex flex-row">
                                 <StarRating class="m-0.5"
-                                            v-for="n in 5"
-                                            :type="product.rating>=n?'filled':'unfilled'"></StarRating>
+                                            v-for="n in rating"
+                                            type="filled"></StarRating>
+                                <StarRating class="m-0.5"
+                                            v-if=" 5-rating>0"
+                                            type="half"></StarRating>
+
+                                <StarRating class="m-0.5"
+                                            v-if="rating<5"
+                                            v-for="n in 5-rating-1"
+                                            type="unfilled"></StarRating>
                             </div>
                         </dt>
                     </div>
@@ -50,9 +58,8 @@
 
 <script lang="ts" setup>
     import Product from "../models/Product";
-    import {ref, onBeforeMount} from 'vue';
+    import {computed, onBeforeMount, ref} from 'vue';
     import {useRoute} from "vue-router";
-    import StarRating from '../components/StarRating.vue'
 
     const route = useRoute();
     const product = ref<Product>({
@@ -89,7 +96,9 @@
             watchProductList.value = JSON.parse(products);
             isWatching.value = watchProductList.value.some(item => item.id === product.value.id)
         }
-
+    })
+    const rating = computed(() => {
+        return parseInt(String(Math.round(product.value.rating)));
     })
 </script>
 
